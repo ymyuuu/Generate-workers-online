@@ -689,7 +689,8 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
  * @returns {string}
  */
 function getVLESSConfig(userIDs, hostName) {
-	const commonUrlPart = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
+	const commonUrlPartMain = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
+    const commonUrlPartSec = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${proxyIP}`;
 	const separator = "---------------------------------------------------------------";
 	const hashSeparator = "################################################################";
 
@@ -703,8 +704,8 @@ function getVLESSConfig(userIDs, hostName) {
 
 	// Generate output string for each userID
 	userIDArray.forEach((userID) => {
-		const vlessMain = `vless://${userID}@${hostName}${commonUrlPart}`;
-		const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPart}`;
+		const vlessMain = `vless://${userID}@${hostName}${commonUrlPartMain}`;
+        const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPartSec}`;
 		output.push(`UUID: ${userID}<br>`);
 		output.push(`Ports: 80, 8080, 8880, 2052, 2086, 2095, 443, 8443, 2053, 2096, 2087, 2083`);
 		output.push(`http port: 80, 8080, 8880, 2052, 2086, 2095`);
@@ -714,7 +715,7 @@ function getVLESSConfig(userIDs, hostName) {
 		  }
 		output.push(`${hashSeparator}\nDefault IP address\n${separator}\n${vlessSec}\n${separator}`);
 	});
-	output.push(`${hashSeparator}\nClash Proxy Provider\n${separator}\nproxy-groups:\n  - name: UseProvider\n	type: select\n	use:\n	  - provider1\n	proxies:\n	  - Proxy\n	  - DIRECT\nproxy-providers:\n  provider1:\n	type: http\n	url: https://${hostName}/sub/${userIDArray[0]}?format=clash\n	interval: 3600\n	path: ./provider1.yaml\n	health-check:\n	  enable: true\n	  interval: 600\n	  # lazy: true\n	  url: http://www.gstatic.com/generate_204\n${separator}\n${hashSeparator}`);
+	output.push(`${hashSeparator}\nClash Proxy Provider\n${separator}\nproxy-groups:\n  - name: UseProvider\n	type: select\n	use:\n	  - provider1\n	proxies:\n	  - Proxy\n	  - DIRECT\nproxy-providers:\n  provider1:\n	type: http\n	interval: 3600\n	path: ./provider1.yaml\n	health-check:\n	  enable: true\n	  interval: 600\n	  # lazy: true\n	  url: http://www.gstatic.com/generate_204\n${separator}\n${hashSeparator}`);
 
 	// HTML Head with CSS
 	const htmlHead = `
