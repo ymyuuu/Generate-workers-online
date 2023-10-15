@@ -60,4 +60,5 @@
 
 感谢你的使用！如果你对这个项目有任何改进或建议，也欢迎贡献代码或提出问题。
 
-### 感谢：CF-vless代码作者[3Kmfi6HP](https://github.com/3Kmfi6HP/EDtunnel)
+---
+### 感谢：workers代码作者[3Kmfi6HP](https://github.com/3Kmfi6HP/EDtunnel)
