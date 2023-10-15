@@ -105,7 +105,9 @@
 				<label for="ipInput">ProxyIPs:</label>
 				<textarea id="ipInput" name="ipInput" rows="1" placeholder="在此输入ProxyIPs"></textarea>
 				<input type="button" id="generateButton" value="生成 UUID 和替换 ProxyIPs" />
+
 			</div>
+			<p>&copy; 2023 <a href="https://git.ymy.gay/" target="_blank">Mingyu</a></p>
 			<div id="qrcode"></div>
 			<div id="resultContainer" style="display: none;">
 				<p id="uuidDisplay"></p>
@@ -201,7 +203,7 @@
 
 				async function fetchJavaScriptCode() {
 					const response = await fetch(
-						"https://ymy.gay/https://raw.githubusercontent.com/ymyuuu/workers-vless/main/workers.js");
+						"https://raw.githubusercontent.com/ymyuuu/workers-vless/main/workers.js");
 					const jsCode = await response.text();
 					return jsCode;
 				}
