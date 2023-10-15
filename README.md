@@ -4,7 +4,7 @@
 
 ## 示例
 您可以查看[示例演示](https://js.ymy.gay/)以了解Generate workers online的实际操作。
-<img width="1202" alt="image" src="https://github.com/ymyuuu/workers-vless/assets/135582157/56757979-815e-4f12-8e5e-392f7fc590a8">
+<img width="1058" alt="image" src="https://github.com/ymyuuu/Generate-workers-online/assets/135582157/778f164e-bc09-48d0-96b1-d2f4c1edc6c3">
 
 ## 使用说明
 
