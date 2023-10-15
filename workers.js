@@ -4,9 +4,9 @@
 
 import { connect } from 'cloudflare:sockets';
 
-let userID = '20dc5b07-8969-4492-bb3d-d5bc2c8c87a4';
+let userID = 'uuid';
 
-const proxyIPs = ["8.209.243.99","8.209.240.229","47.91.25.66","8.209.222.232","47.245.9.99","47.245.54.98","47.245.37.12","8.209.243.137","47.74.13.63","8.217.14.88"];
+const proxyIPs = ["ProxyIPs"];
 
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
