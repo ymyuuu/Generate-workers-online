@@ -6,7 +6,7 @@ import { connect } from 'cloudflare:sockets';
 
 let userID = 'uuid';
 
-const proxyIPs = ["ProxyIPs"];
+const proxyIPs = ["proxyIPs"];
 
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
@@ -689,7 +689,8 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
  * @returns {string}
  */
 function getVLESSConfig(userIDs, hostName) {
-	const commonUrlPart = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
+	const commonUrlPartMain = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
+    const commonUrlPartSec = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${proxyIP}`;
 	const separator = "---------------------------------------------------------------";
 	const hashSeparator = "################################################################";
 
@@ -703,8 +704,8 @@ function getVLESSConfig(userIDs, hostName) {
 
 	// Generate output string for each userID
 	userIDArray.forEach((userID) => {
-		const vlessMain = `vless://${userID}@${hostName}${commonUrlPart}`;
-		const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPart}`;
+		const vlessMain = `vless://${userID}@${hostName}${commonUrlPartMain}`;
+        const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPartSec}`;
 		output.push(`UUID: ${userID}<br>`);
 		output.push(`Ports: 80, 8080, 8880, 2052, 2086, 2095, 443, 8443, 2053, 2096, 2087, 2083`);
 		output.push(`http port: 80, 8080, 8880, 2052, 2086, 2095`);
