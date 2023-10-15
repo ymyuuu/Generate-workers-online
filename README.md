@@ -3,7 +3,7 @@
 这是一个用于在线生成 Workers 的 HTML 页面。通过填写 UUID 和代理IP信息，你可以生成 Workers 所需的配置代码，并将其复制到剪贴板以供使用。
 
 ## 示例
-您可以查看[示例演示](https://js.ymy.gay/)以了解网络面板的实际操作。
+您可以查看[示例演示](https://js.ymy.gay/)以了解Generate workers online的实际操作。
 <img width="1202" alt="image" src="https://github.com/ymyuuu/workers-vless/assets/135582157/56757979-815e-4f12-8e5e-392f7fc590a8">
 
 ## 使用说明
