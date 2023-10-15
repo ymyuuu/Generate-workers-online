@@ -1,4 +1,4 @@
-# Generate workers online 说明文档
+# Generate workers online
 
 这是一个用于在线生成 Workers 的 HTML 页面。通过填写 UUID 和代理IP信息，你可以生成 Workers 所需的配置代码，并将其复制到剪贴板以供使用。
 
