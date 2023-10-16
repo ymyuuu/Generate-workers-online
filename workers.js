@@ -736,7 +736,7 @@ function getVLESSConfig(userIDs, hostName) {
     // 准备输出数组
     let output = [];
     let header = [];
-    const clash_link = `https://sub.d1.mk/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online_Mini_MultiMode.ini&sort=true&emoji=true&list=false&xudp=true&udp=true&tfo=false&expand=true&scv=false&fdn=false&clash.doh=true&new_name=true`;
+    const clash_link = `https://sub.d1.mk/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online_Mini.ini&emoji=true&list=false&xudp=true&udp=true&tfo=false&expand=true&scv=true&fdn=false&clash.doh=true&new_name=true`;
     header.push(`<p align="center"><h1 style="text-align: center; font-size: 40px;">Node configuration for <span style="text-decoration: underline; cursor: pointer;" onclick="window.open('https://git.ymy.gay/', '_blank')">Mingyu</span></h1></p>`);
 	header.push(`<div style="text-align: center;">`);
 	header.push(`<a href="//${hostName}/sub/${userIDArray[0]}" target="_blank">VLESS节点订阅链接</a>`);
