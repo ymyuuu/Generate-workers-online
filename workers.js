@@ -1,22 +1,30 @@
-//	Author: Mingyu,Last Modified: 2023-10-15 UTC
+//	Author: Mingyu,Last Modified: 2023-10-17 UTC
 //	在线生成 Cloudflare Workers 配置
 //	https://workers-vless.vercel.app/
 
 import { connect } from 'cloudflare:sockets';
 
-let userID = 'uuid';
+let userID = '';
 
-const proxyIPs = ["proxyIPs"];
+const proxyIPs = [];
 
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
 let dohURL = 'https://dns.alidns.com/dns-query'; // https://cloudflare-dns.com/dns-query or https://dns.google/dns-query
+
+// v2board api environment variables (optional) deprecated, please use planetscale.com instead
 
 if (!isValidUUID(userID)) {
 	throw new Error('uuid is invalid');
 }
 
 export default {
+	/**
+	 * @param {import("@cloudflare/workers-types").Request} request
+	 * @param {{UUID: string, PROXYIP: string, DNS_RESOLVER_URL: string, NODE_ID: int, API_HOST: string, API_TOKEN: string}} env
+	 * @param {import("@cloudflare/workers-types").ExecutionContext} ctx
+	 * @returns {Promise<Response>}
+	 */
 	async fetch(request, env, ctx) {
 		uuid_validator(request);
 		try {
@@ -50,12 +58,28 @@ export default {
 							}
 						});
 					}
+					case `/sub/${userID_Path}`: {
+						const url = new URL(request.url);
+						const searchParams = url.searchParams;
+						let vlessConfig = createVLESSSub(userID, request.headers.get('Host'));
+
+						// If 'format' query param equals to 'clash', convert config to base64
+						if (searchParams.get('format') === 'clash') {
+							vlessConfig = btoa(vlessConfig);
+						}
+
+						// Construct and return response object
+						return new Response(vlessConfig, {
+							status: 200,
+							headers: {
+								"Content-Type": "text/plain;charset=utf-8",
+							}
+						});
+					}
 					default:
-
-						// 对于请求的路径不匹配特定条件的情况，服务器将将请求代理到一个自定义域名并缓存原始响应。
-
+						// return new Response('Not found', { status: 404 });
+						// For any other path, reverse proxy to 'www.fmprc.gov.cn' and return the original response, caching it in the process
 						const hostnames = ['www.fmprc.gov.cn', 'www.xuexi.cn', 'www.gov.cn', 'mail.gov.cn', 'www.mofcom.gov.cn', 'www.gfbzb.gov.cn', 'www.miit.gov.cn', 'www.12377.cn'];
-						
 						url.hostname = hostnames[Math.floor(Math.random() * hostnames.length)];
 						url.protocol = 'https:';
 
@@ -690,34 +714,54 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
  */
 function getVLESSConfig(userIDs, hostName) {
 	const commonUrlPart = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${proxyIP}`;
-	const separator = "---------------------------------------------------------------";
-	const hashSeparator = "################################################################";
+    const separator = "---------------------------------------------------------------";
+    const hashSeparator = "################################################################";
 
-	// Split the userIDs into an array
-	let userIDArray = userIDs.split(',');
+    // 将用户ID拆分为数组
+    let userIDArray = userIDs.split(',');
 
-	// Prepare output array
-	let output = [];
-	let header = [];
+    // 准备输出数组
+    let output = [];
+    let header = [];
+    const clash_link = `https://sub.d1.mk/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online_Mini_MultiMode.ini&sort=true&emoji=true&list=false&xudp=true&udp=true&tfo=false&expand=true&scv=false&fdn=false&clash.doh=true&new_name=true`;
+    header.push(`\n<p align="center"><h1 style="text-align: center;">Node configuration for Mingyu</h1></p>`);
+	header.push(`<div style="text-align: center;">`);
+	header.push(`<a href="//${hostName}/sub/${userIDArray[0]}" target="_blank">VLESS节点订阅链接</a>`);
+	header.push(`&nbsp;&nbsp;`); // 添加间距
+	header.push(`<a href="${clash_link}" target="_blank">Clash节点订阅链接</a>`);
+	header.push(`&nbsp;&nbsp;`); // 添加间距
+	header.push(`<a href="https://url.ymy.gay/" target="_blank">点击生成订阅短链接</a>`);
+	header.push(`</div>`);
 
 
-	// Generate output string for each userID
-	userIDArray.forEach((userID) => {
-		const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPart}`;
-		output.push("© 2023 Mingyu<br><br>");
-		output.push(`UUID: ${userID}<br>`);
-		output.push(`Ports: 80, 8080, 8880, 2052, 2086, 2095, 443, 8443, 2053, 2096, 2087, 2083`);
-		output.push(`http port: 80, 8080, 8880, 2052, 2086, 2095`);
-		output.push(`https port: 443, 8443, 2053, 2096, 2087, 2083<br><br>`);
-		output.push(`${hashSeparator}\nCloudflare Workers VLESS\n${separator}\n${vlessSec}\n${separator}`);
-	});
-	output.push(`${hashSeparator}\nClash Proxy Provider\nproxy-groups:\n  - name: UseProvider\n	type: select\n	use:\n	  - provider1\n	proxies:\n	  - Proxy\n	  - DIRECT\nproxy-providers:\n  provider1:\n	type: http\n	interval: 3600\n	path: ./provider1.yaml\n	health-check:\n	  enable: true\n	  interval: 600\n	  # lazy: true\n	  url: http://www.gstatic.com/generate_204\n${separator}\n${hashSeparator}`);
+    // 为每个用户ID生成输出字符串
+    userIDArray.forEach((userID) => {
+        const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPart}`;
+        output.push(`UUID: ${userID}`);
+        output.push(`${hashSeparator}\nv2ray最佳IP\n${separator}\n${vlessSec}\n${separator}`);
+    });
+    output.push(`${hashSeparator}\n# Clash代理提供程序配置格式\nproxy-groups:\n  - name: UseProvider\n    type: select\n    use:\n      - provider1\n    proxies:\n      - Proxy\n      - DIRECT\nproxy-providers:\n  provider1:\n    type: http\n    url: https://${hostName}/sub/${userIDArray[0]}?format=clash\n    interval: 3600\n    path: ./provider1.yaml\n    health-check:\n      enable: true\n      interval: 600\n      # lazy: true\n      url: http://www.gstatic.com/generate_204\n\n${hashSeparator}`);
 
-	// HTML Head with CSS
-	const htmlHead = `
-    <head>
-        <title>Generate workers online</title>
-        
+    // HTML头部和CSS
+    const htmlHead = `
+	<head>
+    <title>Mingyu's configuration</title>
+    <meta name="description" content="这是一个用于生成VLESS协议配置的工具。">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:site_name" content="Mingyu's configuration" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mingyu - VLESS配置和订阅输出" />
+    <meta property="og:description" content="使用Cloudflare Pages和Worker实现VLESS协议" />
+    <meta property="og:url" content="https://${hostName}/" />
+    <meta property="og:image" content="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(`vless://${userIDs.split(',')[0]}@${hostName}${commonUrlPart}`)}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mingyu - VLESS配置和订阅输出" />
+    <meta name="twitter:description" content="使用Cloudflare Pages和Worker实现VLESS协议" />
+    <meta name="twitter:url" content="https://${hostName}/" />
+    <meta name="twitter:image" content="https://cloudflare-ipfs.com/ipfs/bafybeigd6i5aavwpr6wvnwuyayklq3omonggta4x2q7kpmgafj357nkcky" />
+    <meta property="og:image:width" content="1500" />
+    <meta property="og:image:height" content="1500" />
+
 
         <style>
         body {
@@ -726,7 +770,16 @@ function getVLESSConfig(userIDs, hostName) {
             color: #333;
             padding: 10px;
         }
-		
+
+        a {
+            color: #1a0dab;
+            text-decoration: none;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         pre {
             white-space: pre-wrap;
             word-wrap: break-word;
@@ -735,13 +788,28 @@ function getVLESSConfig(userIDs, hostName) {
             padding: 15px;
             margin: 10px 0;
         }
-		
+        /* 暗黑模式 */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #333;
+                color: #f0f0f0;
+            }
+
+            a {
+                color: #9db4ff;
+            }
+
+            pre {
+                background-color: #282a36;
+                border-color: #6272a4;
+            }
+        }
         </style>
     </head>
     `;
 
-	// Join output with newlines, wrap inside <html> and <body>
-	return `
+    // 将输出连接到换行符中，包装在<html>和<body>内
+    return `
     <html>
     ${htmlHead}
     <body>
@@ -751,4 +819,49 @@ function getVLESSConfig(userIDs, hostName) {
 ">${header.join('')}</pre><pre>${output.join('\n')}</pre>
     </body>
 </html>`;
+}
+
+function createVLESSSub(userID_Path, hostName, selectedProxyIP) {
+    let portArray_http = [80, 8080, 8880, 2052, 2086, 2095, 2082];
+    let portArray_https = [443, 8443, 2053, 2096, 2087, 2083];
+
+    // 将用户ID拆分为数组
+    let userIDArray = userID_Path.includes(',') ? userID_Path.split(',') : [userID_Path];
+
+    // 准备输出数组
+    let output = [];
+
+    // 为每个用户ID生成输出字符串
+    userIDArray.forEach((userID) => {
+        let nodeInfo = ''; // 初始化节点信息
+
+        // 检查hostName是否为Cloudflare Pages域名，如果是，则生成HTTP配置，否则生成HTTP和HTTPS配置
+        if (hostName.endsWith('workers.dev')) {
+            // 针对HTTP遍历所有端口
+            portArray_http.forEach((port) => {
+                const commonUrlPart_http = `:${port}?encryption=none&security=none&fp=random&type=ws&host=${hostName}&path=%2F%3D2048#Sub-${port}`;
+                const vlessMainHttp = `vless://${userID}@${proxyIP}${commonUrlPart_http}`;
+                nodeInfo += vlessMainHttp + '\n';
+            });
+        } else {
+            // 针对HTTP和HTTPS遍历所有端口
+            portArray_http.forEach((port) => {
+                const commonUrlPart_http = `:${port}?encryption=none&security=none&fp=random&type=ws&host=${hostName}&path=%2F%3D2048#Sub-${port}`;
+                const vlessMainHttp = `vless://${userID}@${proxyIP}${commonUrlPart_http}`;
+                nodeInfo += vlessMainHttp + '\n';
+            });
+
+            portArray_https.forEach((port) => {
+                const commonUrlPart_https = `:${port}?encryption=none&security=tls&sni=${hostName}&fp=random&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Sub-${port}`;
+                const vlessMainHttps = `vless://${userID}@${proxyIP}${commonUrlPart_https}`;
+                nodeInfo += vlessMainHttps + '\n';
+            });
+        }
+
+        const base64NodeInfo = btoa(nodeInfo); // 将节点信息进行Base64编码
+        output.push(base64NodeInfo);
+    });
+
+    // 连接Base64编码后的节点信息并使用换行符
+    return output.join('\n');
 }
