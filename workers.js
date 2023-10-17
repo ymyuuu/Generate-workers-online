@@ -724,9 +724,8 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 // 4.Base64编码的节点信息： 在新代码中，生成VLESS配置时，节点信息被Base64编码，以提供更安全的方式传输节点信息。这增强了节点信息的隐私和安全性。
 
 
-
 function getVLESSConfig(userIDs, hostName) {
-	const commonUrlPart = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${proxyIP}`;
+    const commonUrlPart = `:${hostName.endsWith('workers.dev') ? '80' : '443'}?encryption=none&security=${hostName.endsWith('workers.dev') ? 'none' : 'tls'}&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${proxyIP}`;
     const separator = "---------------------------------------------------------------";
     const hashSeparator = "===============================================================";
 
@@ -736,25 +735,33 @@ function getVLESSConfig(userIDs, hostName) {
     // 准备输出数组
     let output = [];
     let header = [];
-    const clash_link = `https://sub.d1.mk/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online_Mini.ini&emoji=true&list=false&xudp=true&udp=true&tfo=false&expand=true&scv=true&fdn=false&clash.doh=true&new_name=true`;
-    header.push(`<p align="center"><h1 style="text-align: center; font-size: 40px;">Node configuration for <span style="text-decoration: underline; cursor: pointer;" onclick="window.open('https://git.ymy.gay/', '_blank')">Mingyu</span></h1></p>`);
-	header.push(`<div style="text-align: center;">`);
-	header.push(`<a href="//${hostName}/sub/${userIDArray[0]}" target="_blank">VLESS节点订阅链接</a>`);
-	header.push(`&nbsp;&nbsp;`); // 添加间距
-	header.push(`<a href="${clash_link}" target="_blank">Clash节点订阅链接</a>`);
-	header.push(`&nbsp;&nbsp;`); // 添加间距
-	header.push(`<a href="https://url.ymy.gay/" target="_blank">点击生成订阅短链接</a>`);
-	header.push(`</div>`);
+    let clashLink = ''; // 初始化 Clash 链接
 
+    if (hostName.endsWith('workers.dev')) {
+        // 只有当 hostName 以 "workers.dev" 结尾时才生成 Clash 链接
+        const clash_link = `https://sub.d1.mk/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online_Mini.ini&emoji=true&list=false&xudp=true&udp=true&tfo=false&expand=true&scv=true&fdn=false&clash.doh=true&new_name=true`;
+        clashLink = `<a href="${clash_link}" target="_blank">Clash节点订阅链接</a>`;
+    }
+
+    header.push(`<p align="center"><h1 style="text-align: center; font-size: 40px;">Node configuration for <span style="text-decoration: underline; cursor: pointer;" onclick="window.open('https://git.ymy.gay/', '_blank')">Mingyu</span></h1></p>`);
+    header.push(`<div style="text-align: center;">`);
+    header.push(`<a href="//${hostName}/sub/${userIDArray[0]}" target="_blank">VLESS节点订阅链接</a>`);
+    header.push(`&nbsp;&nbsp;`); // 添加间距
+    if (clashLink) {
+        header.push(clashLink);
+        header.push(`&nbsp;&nbsp;`); // 添加间距
+    }
+    header.push(`<a href="https://url.ymy.gay/" target="_blank">点击生成订阅短链接</a>`);
+    header.push(`</div>`);
 
     // 为每个用户ID生成输出字符串
     userIDArray.forEach((userID) => {
         const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPart}`;
         output.push("© 2023 Mingyu<br><br>");
-		output.push(`UUID: ${userID}<br>`);
-		output.push(`Ports: 80, 8080, 8880, 2052, 2086, 2095, 443, 8443, 2053, 2096, 2087, 2083`);
-		output.push(`http port: 80, 8080, 8880, 2052, 2086, 2095`);
-		output.push(`https port: 443, 8443, 2053, 2096, 2087, 2083<br>`);
+        output.push(`UUID: ${userID}<br>`);
+        output.push(`Ports: 80, 8080, 8880, 2052, 2086, 2095, 443, 8443, 2053, 2096, 2087, 2083`);
+        output.push(`http port: 80, 8080, 8880, 2052, 2086, 2095`);
+        output.push(`https port: 443, 8443, 2053, 2096, 2087, 2083<br>`);
         output.push(`${hashSeparator}\n\nV2ray-vless\n${separator}\n${vlessSec}\n${separator}`);
     });
     output.push(`\nClash-yaml\n${separator}\nproxy-groups:\n  - name: UseProvider\n    type: select\n    use:\n      - provider1\n    proxies:\n      - Proxy\n      - DIRECT\nproxy-providers:\n  provider1:\n    type: http\n    interval: 3600\n    path: ./provider1.yaml\n    health-check:\n      enable: true\n      interval: 600\n      # lazy: true\n      url: http://www.gstatic.com/generate_204\n${separator}`);
@@ -837,6 +844,7 @@ function getVLESSConfig(userIDs, hostName) {
     </body>
 </html>`;
 }
+
 
 function createVLESSSub(userID_Path, hostName, selectedProxyIP) {
     let portArray_http = [80, 8080, 8880, 2052, 2086, 2095, 2082];
