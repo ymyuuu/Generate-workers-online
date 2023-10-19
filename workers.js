@@ -739,7 +739,7 @@ function getVLESSConfig(userIDs, hostName) {
 
     if (hostName.endsWith('workers.dev')) {
         // 只有当 hostName 以 "workers.dev" 结尾时才生成 Clash 链接
-        const clash_link = `https://subconversion.ymyuuu.workers.dev/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
+        const clash_link = `https://subconversion.ymy.gay/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
         clashLink = `<a href="${clash_link}" target="_blank">Clash节点订阅链接</a>`;
     }
 
