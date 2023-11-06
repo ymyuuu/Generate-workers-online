@@ -40,7 +40,6 @@
 				margin-bottom: 10px;
 			}
 
-
 			input[type="button"] {
 				background-color: #ff6b81;
 				color: #fff;
@@ -96,7 +95,6 @@
 			}
 		</style>
 	</head>
-
 	<body>
 		<div id="container">
 			<h1>Generate workers online</h1>
@@ -106,26 +104,33 @@
 				<label for="ipInput">ProxyIPs:</label>
 				<textarea id="ipInput" name="ipInput" rows="1" placeholder="在此输入ProxyIPs"></textarea>
 				<input type="button" id="generateButton" value="生成 UUID 和替换 ProxyIPs" />
-
 			</div>
-
 			<div id="qrcode"></div>
-
 			<div id="resultContainer" style="display: none;">
 				<button id="copyButton">复制</button>
 				<pre id="jsCodeDisplay"></pre>
 			</div>
 			<p>&copy; 2023 <a href="https://ymyuuu.github.io/" target="_blank">Mingyu</a></p>
-
 		</div>
 
 		<script>
+			var textarea = document.getElementById("ipInput");
+
+			textarea.addEventListener("input", function() {
+				this.style.height = "auto"; // 重置高度以便测量内容的实际高度
+				this.style.height = this.scrollHeight + "px"; // 设置高度以适应内容
+			});
+
+			// 触发一次输入事件以处理初始文本
+			textarea.dispatchEvent(new Event("input"));
 			document.addEventListener("DOMContentLoaded", function() {
 				const generateButton = document.getElementById("generateButton");
 				const uuidInput = document.getElementById("uuidInput");
 				const ipInput = document.getElementById("ipInput");
+				const uuidDisplay = document.getElementById("uuidDisplay");
 				const jsCodeDisplay = document.getElementById("jsCodeDisplay");
 				const resultContainer = document.getElementById('resultContainer');
+				const defaultProxyIPs = "cf.yumy.gay";
 
 				generateButton.addEventListener("click", async function() {
 					// 获取输入的UUID，如果为空则自动生成
@@ -134,11 +139,14 @@
 						generatedUUID = generateUUID();
 					}
 
-					// 获取输入的代理IP
-					const proxyIPs = extractProxyIPs(ipInput.value);
+					// 获取输入的代理IP，如果为空则使用默认代理IP
+					let proxyIPInput = ipInput.value.trim();
+					if (proxyIPInput === "") {
+						proxyIPInput = defaultProxyIPs;
+					}
 
 					// 生成const proxyIPs函数
-					const proxyIPsFunction = `const proxyIPs = ${JSON.stringify(proxyIPs)};`;
+					const proxyIPsFunction = `const proxyIPs = ${JSON.stringify(proxyIPInput)};`;
 
 					// 获取 JavaScript 文件并替换代码
 					const jsCode = await fetchJavaScriptCode();
@@ -182,12 +190,6 @@
 							v = c == "x" ? r : (r & 0x3 | 0x8);
 						return v.toString(16);
 					});
-				}
-
-				function extractProxyIPs(ipInputValue) {
-					// 使用正则表达式提取IP地址或域名信息
-					const ips = ipInputValue.match(/(\d+\.\d+\.\d+\.\d+|[\w.-]+\.\w{2,20})/g) || [];
-					return ips;
 				}
 
 				async function fetchJavaScriptCode() {
