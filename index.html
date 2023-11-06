@@ -136,6 +136,7 @@
 				const uuidDisplay = document.getElementById("uuidDisplay");
 				const jsCodeDisplay = document.getElementById("jsCodeDisplay");
 				const resultContainer = document.getElementById('resultContainer');
+				ipInput.value = "cf.yumy.gay";
 
 				generateButton.addEventListener("click", async function() {
 					// 获取输入的UUID，如果为空则自动生成
@@ -148,10 +149,7 @@
 					const proxyIPs = extractProxyIPs(ipInput.value);
 
 					// 生成const proxyIPs函数
-					const defaultProxyIPs = ["cf.yumy.gay"];
-					const proxyIPsFunction =
-						`const proxyIPs = ${JSON.stringify(proxyIPs.length > 0 ? proxyIPs : defaultProxyIPs)};`;
-
+					const proxyIPsFunction = `const proxyIPs = ${JSON.stringify(proxyIPs)};`;
 
 
 
@@ -201,8 +199,7 @@
 
 				function extractProxyIPs(ipInputValue) {
 					// 使用正则表达式提取IP地址或域名信息
-					const ips = ipInputValue.length > 0 ? ipInputValue.match(
-						/(\d+\.\d+\.\d+\.\d+|[\w.-]+\.\w{2,20})/g) || [] : defaultProxyIPs;
+					const ips = ipInputValue.match(/(\d+\.\d+\.\d+\.\d+|[\w.-]+\.\w{2,20})/g) || [];
 					return ips;
 				}
 
