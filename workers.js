@@ -6,7 +6,7 @@ import { connect } from 'cloudflare:sockets';
 
 let userID = 'uuid';
 
-const proxyIPs = ["cf.yumy.gay"];
+const proxyIPs = ["proxyIPs"];
 
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
