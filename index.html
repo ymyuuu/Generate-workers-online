@@ -40,7 +40,6 @@
 				margin-bottom: 10px;
 			}
 
-
 			input[type="button"] {
 				background-color: #ff6b81;
 				color: #fff;
@@ -104,7 +103,7 @@
 				<label for="uuidInput">UUID:</label>
 				<input type="text" id="uuidInput" name="uuidInput" placeholder="自动生成或输入UUID" />
 				<label for="ipInput">ProxyIPs:</label>
-				<textarea id="ipInput" name="ipInput" rows="1" placeholder="在此输入ProxyIPs"></textarea>
+				<textarea id="ipInput" name="ipInput" rows="1" placeholder="cf.yumy.gay"></textarea>
 				<input type="button" id="generateButton" value="生成 UUID 和替换 ProxyIPs" />
 
 			</div>
@@ -136,7 +135,6 @@
 				const uuidDisplay = document.getElementById("uuidDisplay");
 				const jsCodeDisplay = document.getElementById("jsCodeDisplay");
 				const resultContainer = document.getElementById('resultContainer');
-				ipInput.value = "cf.yumy.gay";
 
 				generateButton.addEventListener("click", async function() {
 					// 获取输入的UUID，如果为空则自动生成
@@ -150,8 +148,6 @@
 
 					// 生成const proxyIPs函数
 					const proxyIPsFunction = `const proxyIPs = ${JSON.stringify(proxyIPs)};`;
-
-
 
 					// 获取 JavaScript 文件并替换代码
 					const jsCode = await fetchJavaScriptCode();
@@ -203,7 +199,6 @@
 					return ips;
 				}
 
-
 				async function fetchJavaScriptCode() {
 					const response = await fetch(
 						"https://ymy.gay/https://raw.githubusercontent.com/ymyuuu/workers-vless/main/workers.js");
@@ -217,8 +212,5 @@
 				}
 			});
 		</script>
-
-
-
 	</body>
 </html>
