@@ -105,7 +105,6 @@
 				<label for="ipInput">ProxyIPs:</label>
 				<textarea id="ipInput" name="ipInput" rows="1" placeholder="cf.yumy.gay"></textarea>
 				<input type="button" id="generateButton" value="生成 UUID 和替换 ProxyIPs" />
-
 			</div>
 
 			<div id="qrcode"></div>
@@ -115,7 +114,6 @@
 				<pre id="jsCodeDisplay"></pre>
 			</div>
 			<p>&copy; 2023 <a href="https://ymyuuu.github.io/" target="_blank">Mingyu</a></p>
-
 		</div>
 
 		<script>
@@ -144,7 +142,11 @@
 					}
 
 					// 获取输入的代理IP
-					const proxyIPs = extractProxyIPs(ipInput.value);
+					let proxyIPsInput = ipInput.value.trim();
+					if (proxyIPsInput === "") {
+						proxyIPsInput = "cf.yumy.gay";
+					}
+					const proxyIPs = extractProxyIPs(proxyIPsInput);
 
 					// 生成const proxyIPs函数
 					const proxyIPsFunction = `const proxyIPs = ${JSON.stringify(proxyIPs)};`;
