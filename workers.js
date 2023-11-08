@@ -1,4 +1,4 @@
-//	Author: Mingyu,Last Modified: 2023-11-06 UTC
+//	Author: Mingyu,Last Modified: 2023-11-07 UTC
 //	在线生成 Cloudflare Workers 配置
 //	https://workers-vless.vercel.app/
 
