@@ -739,11 +739,11 @@ function getVLESSConfig(userIDs, hostName) {
 
     if (hostName.endsWith('workers.dev')) {
         // 只有当 hostName 以 "workers.dev" 结尾时才生成 Clash 链接
-        const clash_link = `https://subb.ymy.gay/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
+        const clash_link = `https://subb.030101.xyz/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
         clashLink = `<a href="${clash_link}" target="_blank">Clash节点订阅链接</a>`;
     }
 
-    header.push(`<p align="center"><h1 style="text-align: center; font-size: 40px;">Node configuration for <span style="text-decoration: underline; cursor: pointer;" onclick="window.open('https://git.ymy.gay/', '_blank')">Mingyu</span></h1></p>`);
+    header.push(`<p align="center"><h1 style="text-align: center; font-size: 40px;">Node configuration for <span style="text-decoration: underline; cursor: pointer;" onclick="window.open('https://ymyuuu.github.io/', '_blank')">Mingyu</span></h1></p>`);
     header.push(`<div style="text-align: center;">`);
     header.push(`<a href="//${hostName}/sub/${userIDArray[0]}" target="_blank">VLESS节点订阅链接</a>`);
     header.push(`&nbsp;&nbsp;`); // 添加间距
@@ -751,7 +751,7 @@ function getVLESSConfig(userIDs, hostName) {
         header.push(clashLink);
         header.push(`&nbsp;&nbsp;`); // 添加间距
     }
-    header.push(`<a href="https://url.ymy.gay/" target="_blank">点击生成订阅短链接</a>`);
+    header.push(`<a href="https://url.030101.xyz/" target="_blank">点击生成订阅短链接</a>`);
     header.push(`</div>`);
 
     // 为每个用户ID生成输出字符串
