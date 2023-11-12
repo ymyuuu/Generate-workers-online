@@ -105,7 +105,7 @@
 				<label for="uuidInput">UUID:</label>
 				<input type="text" id="uuidInput" name="uuidInput" placeholder="在此输入UUID,留空则随机生成" />
 				<label for="ipInput">ProxyIPs:</label>
-				<textarea id="ipInput" name="ipInput" rows="1" placeholder="在此输入ProxyIPs,留空则为cf.yumy.gay"></textarea>
+				<textarea id="ipInput" name="ipInput" rows="1" placeholder="在此输入ProxyIPs,留空则为默认"></textarea>
 				<input type="button" id="generateButton" value="生成 UUID 和替换 ProxyIPs" />
 
 			</div>
@@ -148,7 +148,8 @@
 					// 获取输入的代理IP
 					let proxyIPInputValue = ipInput.value.trim();
 					if (proxyIPInputValue === "") {
-						proxyIPInputValue = "cf.yumy.gay"; // 使用默认值
+						proxyIPInputValue = "cdn-b100.xn--b6gac.eu.org", "edgetunnel.anycast.eu.org",
+							"cdn.anycast.eu.org"; //默认
 					}
 					const proxyIPs = extractProxyIPs(proxyIPInputValue);
 
