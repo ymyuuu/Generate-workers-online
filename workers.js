@@ -1,4 +1,4 @@
-//	Author: Mingyu,Last Modified: 2023-11-15 UTC
+//	Author: Mingyu,Last Modified: 2023-11-20 UTC
 
 import {
 	connect
@@ -770,7 +770,7 @@ function createVLESSSub(userID_Path, hostName, selectedProxyIP) {
 			// 针对HTTP遍历所有端口
 			portArray_http.forEach((port) => {
 				const commonUrlPart_http =
-					`:${port}?encryption=none&security=none&fp=random&type=ws&host=${hostName}&path=%2F%3D2048#Sub-${port}`;
+					`:${port}?encryption=none&security=none&fp=random&type=ws&host=${hostName}&path=%2F%3D2048#CFWorker-${port}`;
 				const vlessMainHttp = `vless://${userID}@${proxyIP}${commonUrlPart_http}`;
 				nodeInfo += vlessMainHttp + '\n';
 			});
@@ -778,14 +778,14 @@ function createVLESSSub(userID_Path, hostName, selectedProxyIP) {
 			// 针对HTTP和HTTPS遍历所有端口
 			portArray_http.forEach((port) => {
 				const commonUrlPart_http =
-					`:${port}?encryption=none&security=none&fp=random&type=ws&host=${hostName}&path=%2F%3D2048#Sub-${port}`;
+					`:${port}?encryption=none&security=none&fp=random&type=ws&host=${hostName}&path=%2F%3D2048#CFWorker-${port}`;
 				const vlessMainHttp = `vless://${userID}@${proxyIP}${commonUrlPart_http}`;
 				nodeInfo += vlessMainHttp + '\n';
 			});
 
 			portArray_https.forEach((port) => {
 				const commonUrlPart_https =
-					`:${port}?encryption=none&security=tls&sni=${hostName}&fp=random&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Sub-${port}`;
+					`:${port}?encryption=none&security=tls&sni=${hostName}&fp=random&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#CFWorker-${port}`;
 				const vlessMainHttps = `vless://${userID}@${proxyIP}${commonUrlPart_https}`;
 				nodeInfo += vlessMainHttps + '\n';
 			});
