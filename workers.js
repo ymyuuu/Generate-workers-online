@@ -1,12 +1,12 @@
-//	Author: Mingyu,Last Modified: 2023-11-20 UTC
+//	Author: Mingyu,Last Modified: 2024-01-15 UTC
 
 import {
 	connect
 } from 'cloudflare:sockets';
 
-let userID = 'uuid';
+let userID = '463e795f-3ded-41b4-927c-2c2221615376';
 
-const proxyIPs = [];
+const proxyIPs = ["cdn-b100.xn--b6gac.eu.org","edgetunnel.anycast.eu.org","cdn.anycast.eu.org"];
 
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
@@ -640,7 +640,7 @@ function getVLESSConfig(userIDs, hostName) {
 	if (hostName.endsWith('workers.dev')) {
 		// 只有当 hostName 以 "workers.dev" 结尾时才生成 Clash 链接
 		const clash_link =
-			`https://subb.030101.xyz/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
+			`https://sub.030101.xyz/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 		clashLink = `<a href="${clash_link}" target="_blank">Clash节点订阅链接</a>`;
 	}
 
@@ -654,13 +654,12 @@ function getVLESSConfig(userIDs, hostName) {
 		header.push(clashLink);
 		header.push(`&nbsp;&nbsp;`); // 添加间距
 	}
-	header.push(`<a href="https://url.030101.xyz/" target="_blank">点击生成订阅短链接</a>`);
 	header.push(`</div>`);
 
 	// 为每个用户ID生成输出字符串
 	userIDArray.forEach((userID) => {
 		const vlessSec = `vless://${userID}@${proxyIP}${commonUrlPart}`;
-		output.push("© 2023 Mingyu<br><br>");
+		output.push("© 2023-2024 Mingyu<br><br>");
 		output.push(`UUID: ${userID}<br>`);
 		output.push(`Ports: 80, 8080, 8880, 2052, 2086, 2095, 443, 8443, 2053, 2096, 2087, 2083`);
 		output.push(`http port: 80, 8080, 8880, 2052, 2086, 2095`);
