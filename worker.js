@@ -65,7 +65,7 @@ export default {
 						});
 					}
 					default:
-						const hostnames = ['m.client.10010.com'];
+						const hostnames = ['api.030101.xyz'];
 						url.hostname = hostnames[Math.floor(Math.random() * hostnames.length)];
 						url.protocol = 'https:';
 
@@ -74,7 +74,6 @@ export default {
 							'cf-connecting-ip'));
 						newHeaders.set('x-forwarded-for', newHeaders.get('cf-connecting-ip'));
 						newHeaders.set('x-real-ip', newHeaders.get('cf-connecting-ip'));
-						newHeaders.set('referer', 'https://www.google.com/q=edtunnel');
 
 						request = new Request(url, {
 							method: request.method,
