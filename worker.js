@@ -10,7 +10,8 @@ const proxyIPs = ["nine.ymy.gay"];
 
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
-let dohURL = 'https://cloudflare-dns.com/dns-query'; // https://cloudflare-dns.com/dns-query or https://dns.google/dns-query
+let dohURL =
+	'https://cloudflare-dns.com/dns-query'; // https://cloudflare-dns.com/dns-query or https://dns.google/dns-query
 
 if (!isValidUUID(userID)) {
 	throw new Error('uuid is invalid');
@@ -640,7 +641,7 @@ function getVLESSConfig(userIDs, hostName) {
 	if (hostName.endsWith('workers.dev')) {
 		// 只有当 hostName 以 "workers.dev" 结尾时才生成 Clash 链接
 		const clash_link =
-			`https://sub.030101.xyz/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
+			`https://sub.set.030101.xyz/sub?target=clash&url=https://${hostName}/sub/${userIDArray[0]}&insert=false&config=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FSleepyHeeead%2Fsubconverter-config%40master%2Fremote-config%2Fcustomized%2Fark.ini&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 		clashLink = `<a href="${clash_link}" target="_blank">Clash节点订阅链接</a>`;
 	}
 
