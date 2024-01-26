@@ -2,11 +2,8 @@
 
 这是一个用于在线生成 Workers 的 HTML 页面。通过填写 UUID 和代理IP信息，你可以生成 Workers 所需的配置代码，并将其复制到剪贴板以供使用。
 
-## 交流群和通知频道
-
-欢迎加入我们的交流群 [Preferred IP Push Chat](https://t.me/Preferred_IP_Push_Chat)
-
-同时，你可以关注我们的通知频道 [Preferred IP Push](https://t.me/Preferred_IP_Push)
+- 群聊: [HeroCore](https://t.me/HeroCore)
+- 频道: [HeroMsg](https://t.me/HeroMsg)
 
 ## 示例
 您可以查看[示例演示](https://generate-workers-online.pages.dev/)以了解Generate workers online的实际操作。
