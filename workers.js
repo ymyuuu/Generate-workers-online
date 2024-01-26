@@ -4,7 +4,7 @@ import {
 	connect
 } from 'cloudflare:sockets';
 
-let userID = '463e795f-3ded-41b4-927c-2c2221615376';
+let userID = 'uuid';
 
 const proxyIPs = ["cdn-b100.xn--b6gac.eu.org","edgetunnel.anycast.eu.org","cdn.anycast.eu.org"];
 
