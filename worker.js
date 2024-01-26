@@ -6,7 +6,7 @@ import {
 
 let userID = 'uuid';
 
-const proxyIPs = ["cdn-b100.xn--b6gac.eu.org", "edgetunnel.anycast.eu.org", "cdn.anycast.eu.org"];
+const proxyIPs = ["nine.ymy.gay"];
 
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
