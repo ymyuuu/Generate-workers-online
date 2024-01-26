@@ -6,8 +6,9 @@
 - 频道: [HeroMsg](https://t.me/HeroMsg)
 
 ## 示例
-您可以查看[示例演示](https://generate-workers-online.pages.dev/)以了解Generate workers online的实际操作。
-<img width="1058" alt="image" src="https://github.com/ymyuuu/Generate-workers-online/assets/135582157/778f164e-bc09-48d0-96b1-d2f4c1edc6c3">
+您可以查看[示例演示](https://js.set.030101.xyz/)以了解Generate workers online的实际操作。
+<img width="1460" alt="image" src="https://github.com/ymyuuu/Generate-workers-online/assets/135582157/67216809-d0d2-4855-8ab4-b6af288232ac">
+
 
 ## 使用说明
 
