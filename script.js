@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	const resultContainer = document.getElementById('resultContainer');
 	const copyButton = document.getElementById("copyButton");
 
-	const defaultProxyIPs = "cdn-b100.xn--b6gac.eu.org,edgetunnel.anycast.eu.org,cdn.anycast.eu.org";
+	const defaultProxyIPs = "nine.ymy.gay";
 	const workersJsUrl = "worker.js";
 
 	textarea.addEventListener("input", function() {
