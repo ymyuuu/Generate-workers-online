@@ -53,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		tempInput.select();
 		document.execCommand("copy");
 		document.body.removeChild(tempInput);
-		alert("已复制workers到剪贴板");
 	}
 
 	function generateUUID() {
