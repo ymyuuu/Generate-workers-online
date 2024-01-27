@@ -1,40 +1,62 @@
-//	Author: Mingyu,Last Modified: 2024-01-26 UTC
+// Please comply with local laws when using.
 
-import {
-	connect
-} from 'cloudflare:sockets';
+import { connect } from 'cloudflare:sockets';
 
-let userID = 'uuid';
+const bestIP = "bestcf.ymy.gay"; // 空字符串表示未设置
+
+const userID = '13516920-8ff7-4382-a55b-f0dc2c4378f7';
 
 const proxyIPs = ["nine.ymy.gay"];
 
-let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
+const proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
 if (!isValidUUID(userID)) {
-	throw new Error('uuid is not valid');
+	throw new Error('The uuid is not set');
 }
+
+let main = bestIP || proxyIP; // 将 main 移到全局作用域
+
+const translationMap = {
+	"continent": "所在大洲",
+	"country": "所在国家",
+	"latitude": "纬度",
+	"longitude": "经度",
+	"timezone": "时区",
+	"asn": "自治系统号",
+	"httpProtocol": "HTTP协议版本",
+	"tlsCipher": "TLS加密套件",
+	"tlsVersion": "TLS协议版本",
+	"tlsExportedAuthenticator": "TLS握手信息",
+	"requestPriority": "请求优先级",
+	"asOrganization": "自治系统组织",
+	"colo": "所在数据中心位置"
+};
 
 export default {
 	async fetch(request, env, ctx) {
 		try {
 			const upgradeHeader = request.headers.get('Upgrade');
+			const url = new URL(request.url);
+
+			if (url.pathname === '/sub') {
+				const allLinks = generateAllLinks(url.host);
+				const base64Links = btoa(allLinks.join('\n'));
+				return new Response(base64Links, {
+					status: 200,
+					headers: {
+						"Content-Type": "text/plain;charset=utf-8"
+					}
+				});
+			}
+
 			if (!upgradeHeader || upgradeHeader !== 'websocket') {
-				const url = new URL(request.url);
 				switch (url.pathname) {
 					case '/':
-						// 删除 tlsClientAuth 字段
-						const cfWithoutTlsClientAuth = {
-							...request.cf
-						};
-						delete cfWithoutTlsClientAuth.tlsClientAuth;
-
-						// 将字段名翻译为中文，并且只保留翻译过的字段
-						const translatedData = translateFieldsToChinese(cfWithoutTlsClientAuth);
-
-						return new Response(JSON.stringify(translatedData, null, 2), {
+						const responseText = generateResponseText(request.cf, url.host);
+						return new Response(responseText, {
 							status: 200,
 							headers: {
-								"Content-Type": "application/json;charset=utf-8"
+								"Content-Type": "text/plain;charset=utf-8"
 							}
 						});
 					default:
@@ -53,26 +75,25 @@ export default {
 	},
 };
 
+function generateResponseText(cf, host) {
+	const translatedData = translateFieldsToChinese(cf);
+	const additionalData =
+		`GitHub: https://github.com/ymyuuu\nTelegram: https://t.me/HeroCore\n\nHost: ${host}${bestIP ? '\nBestIP: ' + bestIP : ''}\nProxyIP: ${proxyIP}\nUUID: ${userID}`;
+	const httpLinks = generateHTTPLinks(host);
+	const isNotWorkersDev = !host.endsWith('workers.dev');
+	const httpsLinks = isNotWorkersDev ? generateHTTPSLinks(host) : null;
 
+	let responseText =
+		`ResponseText:\n${JSON.stringify(translatedData, null, 2)}\n\n${additionalData}\n\nHTTP Port: 80, 8080, 8880, 2052, 2086, 2095\n${httpLinks.join('\n')}`;
+
+	if (isNotWorkersDev && httpsLinks) {
+		responseText += `\n\nHTTPS Port: 443, 8443, 2053, 2096, 2087, 2083\n${httpsLinks.join('\n')}`;
+	}
+
+	return responseText;
+}
 
 function translateFieldsToChinese(data) {
-	const translationMap = {
-		"continent": "所在大洲",
-		"country": "所在国家",
-		"latitude": "纬度",
-		"longitude": "经度",
-		"timezone": "时区",
-		"asn": "自治系统号",
-		"httpProtocol": "HTTP协议版本",
-		"tlsCipher": "TLS加密套件",
-		"tlsVersion": "TLS协议版本",
-		"tlsExportedAuthenticator": "TLS握手信息",
-		"requestPriority": "请求优先级",
-		"asOrganization": "自治系统组织",
-		"verifiedBotCategory": "验证的机器人类别",
-		"colo": "所在数据中心位置"
-	};
-
 	const translatedData = {};
 	for (const key of Object.keys(translationMap)) {
 		if (data[key]) {
@@ -81,6 +102,31 @@ function translateFieldsToChinese(data) {
 	}
 
 	return translatedData;
+}
+
+function generateHTTPLinks(host) {
+	const httpPorts = [80, 8080, 8880, 2052, 2086, 2095];
+	return httpPorts.map(port =>
+		`vless://${userID}@${main}:${port}?encryption=none&security=none&fp=random&type=ws&host=${host}&path=%2F%3D2048#SubAPI-${port}`
+	);
+}
+
+function generateHTTPSLinks(host) {
+	const httpsPorts = [443, 8443, 2053, 2096, 2087, 2083];
+	return httpsPorts.map(port =>
+		`vless://${userID}@${main}:${port}?encryption=none&security=tls&sni=${host}&fp=random&type=ws&host=${host}&path=%2F%3Fed%3D2048#SubAPI-${port}`
+	);
+}
+
+function generateAllLinks(host) {
+	const allLinks = [...generateHTTPLinks(host)];
+
+	const isNotWorkersDev = !host.endsWith('workers.dev');
+	if (isNotWorkersDev) {
+		allLinks.push(...generateHTTPSLinks(host));
+	}
+
+	return allLinks;
 }
 
 
@@ -135,19 +181,16 @@ async function vlessOverWSHandler(request) {
 			portWithRandomLog = `${portRemote}--${Math.random()} ${isUDP ? 'udp ' : 'tcp '
 				} `;
 			if (hasError) {
-				// controller.error(message);
-				throw new Error(message); // cf seems has bug, controller.error will not end stream
-				// webSocket.close(1000, message);
+				throw new Error(message);
 				return;
 			}
-			// if UDP but port not DNS port, close it
 			if (isUDP) {
 				if (portRemote === 53) {
 					isDns = true;
 				} else {
 					throw new Error(
 						'UDP proxy only enable for DNS which is port 53'
-					); // cf seems has bug, controller.error will not end stream
+					);
 					return;
 				}
 			}
@@ -193,7 +236,7 @@ async function handleTCPOutBound(remoteSocket, addressRemote, portRemote, rawCli
 		remoteSocket.value = tcpSocket;
 		log(`connected to ${address}:${port}`);
 		const writer = tcpSocket.writable.getWriter();
-		await writer.write(rawClientData); 
+		await writer.write(rawClientData);
 		writer.releaseLock();
 		return tcpSocket;
 	}
@@ -250,14 +293,8 @@ function makeReadableWebSocketStream(webSocketServer, earlyDataHeader, log) {
 			}
 		},
 
-		pull(controller) {
-			// if ws can stop read if stream is full, we can implement backpressure
-			// https://streams.spec.whatwg.org/#example-rs-push-backpressure
-		},
+		pull(controller) {},
 		cancel(reason) {
-			// 1. pipe WritableStream has error, this cancel will called, so ws handle server close into here
-			// 2. if readableStream is cancel, all controller.close/enqueue need skip,
-			// 3. but from testing controller.error still work even if readableStream is cancel
 			if (readableStreamCancel) {
 				return;
 			}
@@ -295,7 +332,6 @@ function processVlessHeader(
 	}
 
 	const optLength = new Uint8Array(vlessBuffer.slice(17, 18))[0];
-	//skip opt for now
 
 	const command = new Uint8Array(
 		vlessBuffer.slice(18 + optLength, 18 + optLength + 1)
@@ -311,7 +347,6 @@ function processVlessHeader(
 	}
 	const portIndex = 18 + optLength + 1;
 	const portBuffer = vlessBuffer.slice(portIndex, portIndex + 2);
-	// port is big-Endian in raw data etc 80 == 0x005d
 	const portRemote = new DataView(portBuffer).getUint16(0);
 
 	let addressIndex = portIndex + 2;
@@ -344,13 +379,11 @@ function processVlessHeader(
 			const dataView = new DataView(
 				vlessBuffer.slice(addressValueIndex, addressValueIndex + addressLength)
 			);
-			// 2001:0db8:85a3:0000:0000:8a2e:0370:7334
 			const ipv6 = [];
 			for (let i = 0; i < 8; i++) {
 				ipv6.push(dataView.getUint16(i * 2).toString(16));
 			}
 			addressValue = ipv6.join(':');
-			// seems no need add [] for ipv6
 			break;
 		default:
 			return {
@@ -377,7 +410,6 @@ function processVlessHeader(
 }
 
 async function remoteSocketToWS(remoteSocket, webSocket, vlessResponseHeader, retry, log) {
-	// remote--> ws
 	let remoteChunkCount = 0;
 	let chunks = [];
 	let vlessHeader = vlessResponseHeader;
@@ -490,8 +522,6 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 
 		},
 		transform(chunk, controller) {
-			// udp message 2 byte is the the length of udp data
-			// TODO: this should have bug, beacsue maybe udp chunk can be in two websocket message
 			for (let index = 0; index < chunk.byteLength;) {
 				const lengthBuffer = chunk.slice(index, index + 2);
 				const udpPakcetLength = new DataView(lengthBuffer).getUint16(0);
@@ -516,7 +546,6 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 			})
 			const dnsQueryResult = await resp.arrayBuffer();
 			const udpSize = dnsQueryResult.byteLength;
-			// console.log([...new Uint8Array(dnsQueryResult)].map((x) => x.toString(16)));
 			const udpSizeBuffer = new Uint8Array([(udpSize >> 8) & 0xff, udpSize & 0xff]);
 			if (webSocket.readyState === WS_READY_STATE_OPEN) {
 				log(`doh success and dns message length is ${udpSize}`);
@@ -533,7 +562,6 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
 	})).catch((error) => {
 		log('dns udp has error' + error)
 	});
-
 	const writer = transformStream.writable.getWriter();
 
 	return {
